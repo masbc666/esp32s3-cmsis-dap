@@ -38,12 +38,6 @@
 | GPIO43 | TX |
 | GPIO44 | RX |
 
-### 板载
-
-| ESP32-S3 | 功能 |
-|----------|------|
-| GPIO48 | WS2812 状态灯 |
-
 修改引脚：`components/CherryDAP/projects/esp32s3/main/port_common.h`
 
 ## 编译
