@@ -1,54 +1,54 @@
-# ESP32-S3 CMSIS-DAP v2 Debug Probe
+# ESP32-S3 CMSIS-DAP v2 调试探针
 
-Turn an ESP32-S3 into a USB CMSIS-DAP v2 debug probe for ARM Cortex-M targets.
+将 ESP32-S3 做成 USB CMSIS-DAP v2 调试/下载器，用于 ARM Cortex-M 目标芯片。
 
-Tested with Keil MDK + STM32F103C8.
+已在 Keil MDK + STM32F103C8 上验证通过。
 
-## What Works
+## 功能状态
 
-| Feature | Status |
-|---------|--------|
-| SWD (Serial Wire Debug) | Enabled, default port |
-| JTAG | Enabled (nTRST not wired) |
-| Target nRESET | GPIO10, functional — `Reset and Run` works |
-| CDC USB-UART bridge | Available on GPIO43/44 (originally for testing) |
-| SWO | Not implemented |
-| CMSIS-DAP UART protocol | Disabled |
+| 功能 | 状态 |
+|------|------|
+| SWD (串行线调试) | 已启用，默认端口 |
+| JTAG | 已启用（nTRST 未接线） |
+| 目标 nRESET 复位 | GPIO10，可用 — `Reset and Run` 正常 |
+| CDC USB-UART 桥 | 可用，GPIO43/44（原为测试用途） |
+| SWO | 未实现 |
+| CMSIS-DAP UART 协议 | 已禁用 |
 
-Based on [CherryDAP](https://github.com/EZ32Inc/esp32jtag_firmware) (CherryUSB + ARM DAPLink).
+基于 [CherryDAP](https://github.com/EZ32Inc/esp32jtag_firmware)（CherryUSB + ARM DAPLink）。
 
-## Pins
+## 引脚定义
 
-### Debug (SWD / JTAG)
+### 调试接口 (SWD / JTAG)
 
-| ESP32-S3 | Target | Signal |
-|----------|--------|--------|
-| GPIO47 | SWCLK / TCK | Clock |
-| GPIO41 | SWDIO / TMS | Data |
-| GPIO40 | TDI | JTAG only |
-| GPIO15 | TDO | JTAG only |
-| GPIO45 | — | SWDIO direction (optional) |
-| GPIO10 | NRST | Target reset |
-| GND | GND | Ground |
+| ESP32-S3 | 目标板 | 信号 |
+|----------|--------|------|
+| GPIO47 | SWCLK / TCK | 时钟 |
+| GPIO41 | SWDIO / TMS | 数据 |
+| GPIO40 | TDI | 仅 JTAG |
+| GPIO15 | TDO | 仅 JTAG |
+| GPIO45 | — | SWDIO 方向控制（可选） |
+| GPIO10 | NRST | 目标复位 |
+| GND | GND | 地 |
 
-### CDC UART (testing)
+### CDC UART（测试用）
 
-| ESP32-S3 | Target |
+| ESP32-S3 | 目标板 |
 |----------|--------|
 | GPIO43 | TX |
 | GPIO44 | RX |
 
-### Onboard
+### 板载
 
-| ESP32-S3 | Function |
-|----------|----------|
-| GPIO48 | WS2812 status LED |
+| ESP32-S3 | 功能 |
+|----------|------|
+| GPIO48 | WS2812 状态灯 |
 
-To change pins: `components/CherryDAP/projects/esp32s3/main/port_common.h`
+修改引脚：`components/CherryDAP/projects/esp32s3/main/port_common.h`
 
-## Build
+## 编译
 
-ESP-IDF v5.5+ required (tested v5.5.4).
+需要 ESP-IDF v5.5+（已验证 v5.5.4）。
 
 ```powershell
 . /path/to/esp-idf/export.ps1
@@ -56,37 +56,37 @@ idf.py set-target esp32s3
 idf.py build
 ```
 
-## Flash
+## 烧录
 
 ```powershell
 idf.py -p COMx flash
 ```
 
-## Usage
+## 使用
 
-1. Wire ESP32-S3 to target as above
-2. Plug ESP32-S3 USB into PC
-3. Keil MDK will detect **CMSIS-DAP v2** — select it in Debug settings
+1. 按上表接线，将 ESP32-S3 连接到目标板
+2. ESP32-S3 USB 插到电脑
+3. Keil MDK 中会识别到 **CMSIS-DAP v2**，在 Debug 设置中选择即可
 
-If target won't run after flash, ensure CubeMX SYS Debug is `Serial Wire` (not `No Debug`).
+如果烧录后目标板程序不自动运行，检查 CubeMX 中 SYS Debug 是否设为 `Serial Wire`（而非 `No Debug`）。
 
-## Troubleshooting
+## 疑难解答
 
-See [CMSIS_DAP_TROUBLESHOOTING.md](CMSIS_DAP_TROUBLESHOOTING.md).
+见 [CMSIS_DAP_TROUBLESHOOTING.md](CMSIS_DAP_TROUBLESHOOTING.md)。
 
-## Structure
+## 目录结构
 
 ```
-├── main/                   # app_main(), FreeRTOS tasks
+├── main/                   # app_main()、FreeRTOS 任务
 ├── components/CherryDAP/   # CMSIS-DAP + CherryUSB + CherryRB
-│   ├── dap_main.c/h        # DAP command handler
-│   ├── DAP/                # SWD/JTAG protocol engine
-│   ├── CherryUSB/          # USB device stack
-│   └── projects/esp32s3/   # ESP32-S3 platform (pins, usb2uart)
+│   ├── dap_main.c/h        # DAP 命令处理
+│   ├── DAP/                # SWD/JTAG 协议引擎
+│   ├── CherryUSB/          # USB 设备栈
+│   └── projects/esp32s3/   # ESP32-S3 平台适配（引脚、usb2uart）
 ├── sdkconfig.defaults
 └── CMakeLists.txt
 ```
 
-## License
+## 许可证
 
-Apache 2.0 — see `components/CherryDAP/LICENSE`.
+Apache 2.0 — 见 `components/CherryDAP/LICENSE`。
