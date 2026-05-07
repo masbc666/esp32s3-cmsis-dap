@@ -1,0 +1,33 @@
+# ESP-IDF build output
+build/
+sdkconfig
+sdkconfig.old
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Compiled files
+*.bin
+*.elf
+*.map
+*.obj
+*.o
+*.a
+
+# Ninja
+.ninja*
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+
+# Managed components (downloaded by IDF)
+managed_components/
+
+# OS
+.DS_Store
+Thumbs.db
